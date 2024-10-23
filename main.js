@@ -1,4 +1,4 @@
-import './style.css'
+import './style.css';
 
 const div = document.createElement('div');
 div.classList.add('calculator');
@@ -7,6 +7,7 @@ document.body.appendChild(div);
 const divScreen = document.createElement('div');
 divScreen.classList.add('screen');
 divScreen.id = 'screen';
+divScreen.textContent = '0'; // La pantalla comienza mostrando '0'
 div.appendChild(divScreen);
 
 const buttons = document.createElement('ul');
@@ -32,23 +33,59 @@ const mockData = [
   {textContent: "3", "data-key": "3"},
   {textContent: "=", "data-key": "equal", class: "equal tall"},
   {textContent: "0", "data-key": "0", class: "wide shift"},
-  {textContent: ".", "data-key": ".", class: "wide shift"}
+  {textContent: ".", "data-key": ".", class: "shift"}
 ];
 
+// Crear los botones en el DOM
 mockData.map(object => {
   const li = document.createElement('li');
   const a = document.createElement('a');
 
   a.href = '#';
-  a.dataset.key = object['data-key']; 
+  a.dataset.key = object['data-key'];
   a.textContent = object.textContent;
-  a.className = object.class;
+  
+  if (object.class) {
+    a.className = object.class;
+  }
 
   li.appendChild(a);
   buttons.appendChild(li);
-
 });
 
-elements.forEach(li => buttons.appendChild(li));
+let valorActual = '';
 
 
+const actualizarPantalla = (value) => {
+  if (divScreen.style.fontSize === '1rem') {
+    divScreen.style.fontSize = '3rem';
+  }
+  divScreen.textContent = value;
+};
+
+const botonesClick = (key) => {
+  if (key === 'clear') {
+    valorActual = '';
+    actualizarPantalla('0');
+  } else if (key === 'equal') {
+    if (valorActual === '') return;
+    try {
+      const resultado = eval(valorActual);
+      actualizarPantalla(String(resultado));
+    } catch (error) {
+      actualizarPantalla('Error: ' + error.message);
+      divScreen.style.fontSize = '1rem';
+      valorActual = '';
+    }
+  } else {
+      valorActual += key;
+      actualizarPantalla(valorActual);
+  }
+};
+
+buttons.querySelectorAll('a').forEach(button => {
+  button.addEventListener('click', (e) => {
+    const key = e.target.dataset.key;
+    botonesClick(key);
+  });
+});
