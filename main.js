@@ -7,7 +7,7 @@ document.body.appendChild(div);
 const divScreen = document.createElement('div');
 divScreen.classList.add('screen');
 divScreen.id = 'screen';
-divScreen.textContent = '0'; // La pantalla comienza mostrando '0'
+divScreen.textContent = '0';
 div.appendChild(divScreen);
 
 const buttons = document.createElement('ul');
@@ -36,7 +36,6 @@ const mockData = [
   {textContent: ".", "data-key": ".", class: "shift"}
 ];
 
-// Crear los botones en el DOM
 mockData.map(object => {
   const li = document.createElement('li');
   const a = document.createElement('a');
@@ -73,7 +72,7 @@ const botonesClick = (key) => {
       const resultado = eval(valorActual);
       actualizarPantalla(String(resultado));
     } catch (error) {
-      actualizarPantalla('Error: ' + error.message);
+      actualizarPantalla(error.message);
       divScreen.style.fontSize = '1rem';
       valorActual = '';
     }
